@@ -1,5 +1,5 @@
 # Median-in-SQLServer
-SQL Server does not have MEDIAN() Keyword hence below SQL Querry helps to find Median in a Dataset
+SQL Server does not have MEDIAN() Function builtin hence below SQL querry helps to find Median in a dataset (say Numbers and column Number)
 
 ```sql
 DECLARE @total_rows INT
