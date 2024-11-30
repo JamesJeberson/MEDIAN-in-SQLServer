@@ -8,14 +8,19 @@ SET @total_rows = (SELECT COUNT(*) FROM Numbers);
 WITH rownum_cte AS (
     SELECT 
         ROW_NUMBER() OVER(ORDER BY Number ASC) as row_num,
-        LAT_N
+        Number
     FROM Numbers
 )
 SELECT TOP 1 
-        CASE 
-            WHEN (@total_rows % 2 = 1) THEN (SELECT Number FROM rownum_cte WHERE row_num = (@total_rows / 2 + 1))
-            ELSE (SELECT (((CASE WHEN row_num = @total_rows/2 THEN Number END) +
-                           (CASE WHEN row_num = @total_rows/2 + 1 THEN Number END)) / 2))
-        END
-FROM rownum_cte
+        CASE
+            -- For odd row count, return the middle value
+            WHEN @total_rows % 2 = 1 THEN (SELECT Number FROM rownum_cte WHERE row_num = (@total_rows / 2 + 1))
+            -- For even row count, return the average of the two middle values
+            ELSE
+                (SELECT
+                    (
+                    (SELECT Number FROM rownum_cte WHERE row_num = @total_rows / 2) + 
+                    (SELECT Number FROM rownum_cte WHERE row_num = @total_rows / 2 + 1)
+                    ) / 2.0
+        END AS Median;
 ```
